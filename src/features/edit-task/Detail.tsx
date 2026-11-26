@@ -33,7 +33,15 @@ function useDraft<T>(
   const typed = useRef<T | null>(null);
   const sending = useRef<{ value: T } | null>(null);
 
-  const showError = (message: string) => void released().then(() => setError(message));
+  // What was started before a drop() must not bring back its error or its text afterwards.
+  const drops = useRef(0);
+
+  const showError = (message: string) => {
+    const at = drops.current;
+    void released().then(() => {
+      if (drops.current === at) setError(message);
+    });
+  };
 
   const change = (value: T) => {
     typed.current = value;
@@ -41,6 +49,7 @@ function useDraft<T>(
   };
 
   const drop = () => {
+    drops.current += 1;
     typed.current = null;
     setDraft(null);
     setError('');
@@ -60,13 +69,14 @@ function useDraft<T>(
     const mine = { value: result.value };
     sending.current = mine;
     setDraft(result.value);
+    const at = drops.current;
     const ok = await result.save();
     if (sending.current !== mine) return;
     sending.current = null;
     if (typed.current !== null) return;
     // A failed save keeps the text, to be tried again on the next commit.
     if (ok) setDraft(null);
-    else typed.current = raw;
+    else if (drops.current === at) typed.current = raw;
   };
 
   return { value: draft ?? saved, error, change, drop, commit };

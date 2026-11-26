@@ -161,6 +161,26 @@ test('C50 the due time is saved on leaving both fields, errors are not, "Bỏ h�
   expect(await stored(page)).toEqual([{ title: TITLE, dueAt: null }]);
 });
 
+for (const [d, t] of [
+  ['31/02/2026', '10:00'],
+  ['', '10:00'],
+] as const) {
+  test(`C50 "Bỏ hạn" while a due field still holds "${d} ${t}" leaves no error`, async ({ page, signedIn, seedTasks }) => {
+    expect(signedIn.email).toBeTruthy();
+    await seedTasks(page, [{ title: TITLE, dueAt: DUE }]);
+    await select(page, TITLE);
+    await date(page).fill(d);
+    await time(page).fill(t);
+    await expect(time(page)).toBeFocused();
+    await button(page, 'Bỏ hạn').click();
+    await expect(button(page, 'Bỏ hạn')).toHaveCount(0);
+    await expect(date(page)).toHaveValue('');
+    await expect(time(page)).toHaveValue('');
+    await expect(alert(page)).toHaveCount(0);
+    expect(await stored(page)).toEqual([{ title: TITLE, dueAt: null }]);
+  });
+}
+
 test('C51 picking another task saves a valid edit and drops an invalid one', async ({ page, signedIn, seedTasks }) => {
   expect(signedIn.email).toBeTruthy();
   await seedTasks(page, [{ title: TITLE }, { title: OTHER }]);
