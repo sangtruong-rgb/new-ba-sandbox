@@ -1,0 +1,44 @@
+.inline {
+  display: flex;
+  gap: 8px;
+}
+
+.inline input {
+  height: 48px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
+  font-variant-numeric: tabular-nums;
+  min-width: 0;
+}
+
+.inline .date {
+  width: 140px;
+}
+
+.inline .time {
+  width: 96px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 20px 0 6px;
+}
+
+.pane {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.pane input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
+}
