@@ -1,0 +1,29 @@
+/* Direction "Sổ tay" (docs/prototypes/todo-v1/taste.md): light and dark, following the system. */
+:root {
+  color-scheme: light;
+  --bg: #f3eee4;
+  --paper: #fbf8f2;
+  --ink: #1e1a15;
+  --muted: #6a6256;
+  --accent: #b93a25;
+  --accent-ink: #ffffff;
+  --line: #ddd3c3;
+  --focus: #1e1a15;
+
+  --font-serif: 'Fraunces', serif;
+  --font-sans: 'Be Vietnam Pro', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #191612;
+    --paper: #221e19;
+    --ink: #efe8dc;
+    --muted: #ada393;
+    --accent: #ef7a5c;
+    --accent-ink: #1b120e;
+    --line: #3a332a;
+    --focus: #efe8dc;
+  }
+}
