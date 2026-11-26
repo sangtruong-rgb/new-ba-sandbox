@@ -1,0 +1,45 @@
+.title {
+  width: 100%;
+  min-height: 0;
+  resize: none;
+  field-sizing: content;
+  font: 600 22px/1.25 var(--font-serif);
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+  padding: 6px 0;
+}
+
+.title:focus {
+  border-bottom: 2px solid var(--ink);
+  outline: none;
+}
+
+.title[aria-invalid='true'] {
+  border-bottom: 2px solid var(--ink);
+}
+
+.error {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  margin: 4px 0 0;
+}
+
+.clear {
+  margin-top: 8px;
+  font-size: 14px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.none {
+  color: var(--muted);
+  margin-top: 40px;
+}
