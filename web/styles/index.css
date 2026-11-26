@@ -1,0 +1,7 @@
+/* The only global CSS. Features style themselves with CSS modules in their own folder. */
+@import '@fontsource/fraunces/400.css';
+@import '@fontsource/fraunces/600.css';
+@import '@fontsource/be-vietnam-pro/400.css';
+@import '@fontsource/be-vietnam-pro/600.css';
+@import './tokens.css';
+@import './base.css';
