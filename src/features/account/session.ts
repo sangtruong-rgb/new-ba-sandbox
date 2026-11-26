@@ -43,7 +43,7 @@ export function checkSession(): Promise<void> {
 /** Ends the session on the server, empties the page's tasks and shows the sign-in screen. */
 export async function signOut(): Promise<void> {
   try {
-    await api('/account/signout', { method: 'POST', authCheck: true });
+    await api('/account/signout', { method: 'POST', body: {}, authCheck: true });
   } catch {
     // Still leave the page signed out.
   }

@@ -128,3 +128,43 @@ describe('session', () => {
     expect(await list(`sid=${sid(b)}`)).toEqual([]);
   });
 });
+
+describe('cross-site requests (login CSRF)', () => {
+  const formBody = '{"email":"attacker@example.com","password":"mat-khau-1","a":"="}';
+
+  test('C14 a text/plain form post to sign in or sign up is refused before any account or session is made', async () => {
+    await post('/api/account/signup', { email: 'attacker@example.com', password: 'mat-khau-1' });
+    for (const path of ['/api/account/signin', '/api/account/signup']) {
+      const res = await app().request(path, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: formBody });
+      expect(res.status, path).toBe(415);
+      expect(res.headers.get('set-cookie'), path).toBeNull();
+    }
+    expect(userCount()).toBe(1);
+  });
+
+  test('C14 a JSON post from another origin is refused; this origin is accepted', async () => {
+    await post('/api/account/signup', { email: 'attacker@example.com', password: 'mat-khau-1' });
+    const send = (headers: Record<string, string>) =>
+      app().request('http://localhost:57733/api/account/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Host: 'localhost:57733', ...headers },
+        body: formBody,
+      });
+    const refused: Record<string, string>[] = [{ Origin: 'https://evil.example' }, { Origin: 'null' }, { 'Sec-Fetch-Site': 'cross-site' }];
+    for (const headers of refused) {
+      const res = await send(headers);
+      expect(res.status, JSON.stringify(headers)).toBe(403);
+      expect(res.headers.get('set-cookie')).toBeNull();
+    }
+    const own = await send({ Origin: 'http://localhost:57733', 'Sec-Fetch-Site': 'same-origin' });
+    expect(own.status).toBe(200);
+  });
+
+  test('C15 a cross-site sign out is refused and the session stays', async () => {
+    const up = await post('/api/account/signup', { email: 'thu@example.com', password: 'mat-khau-1' });
+    const cookie = `sid=${sid(up)}`;
+    const res = await app().request('/api/account/signout', { method: 'POST', headers: { Cookie: cookie, 'Content-Type': 'text/plain' }, body: '' });
+    expect(res.status).toBe(415);
+    expect((await app().request('/api/me', { headers: { Cookie: cookie } })).status).toBe(200);
+  });
+});

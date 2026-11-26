@@ -18,6 +18,29 @@ async function body(c: Context<AuthEnv>): Promise<{ email?: unknown; password?: 
   }
 }
 
+/**
+ * Refuses a cross-site request before it is read (login CSRF): the body must be JSON, which a
+ * plain HTML form cannot send, and a browser's Origin (or Sec-Fetch-Site) must be this site.
+ */
+function crossSite(c: Context<AuthEnv>): Response | null {
+  const type = (c.req.header('content-type') ?? '').split(';')[0].trim().toLowerCase();
+  if (type !== 'application/json') return c.json({ error: 'unsupported_media_type' }, 415);
+  const site = c.req.header('sec-fetch-site');
+  if (site && site !== 'same-origin' && site !== 'none') return c.json({ error: 'forbidden' }, 403);
+  const origin = c.req.header('origin');
+  if (origin !== undefined) {
+    let host: string | null = null;
+    try {
+      host = new URL(origin).host;
+    } catch {
+      // "null" or garbage: not this site.
+    }
+    const own = c.req.header('host') ?? new URL(c.req.url).host;
+    if (host !== own) return c.json({ error: 'forbidden' }, 403);
+  }
+  return null;
+}
+
 /** Starts a session for the user and answers { id, email } with its cookie. */
 function signedIn(c: Context<AuthEnv>, user: User, status: 200 | 201) {
   const { token } = SessionStore.create(user.id);
@@ -33,6 +56,8 @@ const api: FeatureApi = {
       path: '/account/signup',
       public: true,
       handler: async (c) => {
+        const refused = crossSite(c);
+        if (refused) return refused;
         const { email, password } = await body(c);
         const problem = signUpProblem(email, password);
         if (problem) return c.json({ error: problem }, 400);
@@ -50,6 +75,8 @@ const api: FeatureApi = {
       path: '/account/signin',
       public: true,
       handler: async (c) => {
+        const refused = crossSite(c);
+        if (refused) return refused;
         const { email, password } = await body(c);
         const found = typeof email === 'string' && email ? UserStore.findByEmail(email) : null;
         const ok = found !== null && typeof password === 'string' && (await verifyPassword(password, found.passwordHash));
@@ -62,6 +89,8 @@ const api: FeatureApi = {
       path: '/account/signout',
       public: true,
       handler: (c) => {
+        const refused = crossSite(c);
+        if (refused) return refused;
         const token = getCookie(c, SESSION_COOKIE);
         if (token) SessionStore.destroy(token);
         c.header('Set-Cookie', CLEAR_COOKIE);

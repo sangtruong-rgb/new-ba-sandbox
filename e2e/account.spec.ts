@@ -186,7 +186,7 @@ test('C18 a session ended elsewhere while the list is open shows the "session en
   await seedTasks(page, [{ title: 'Gia hạn hộ chiếu' }]);
   await expect(page.getByText('Gia hạn hộ chiếu')).toBeVisible();
   // Signed out elsewhere: the session is gone on the server.
-  await page.request.post('/api/account/signout');
+  await page.request.post('/api/account/signout', { data: {} });
   expect((await context.cookies()).some((c) => c.name === SESSION_COOKIE)).toBe(false);
   await page.evaluate(async () => {
     const url = '/web/tasks.ts';
@@ -320,7 +320,7 @@ test.describe('C19 390', () => {
     expect(signedIn.email).toBeTruthy();
     await seedTasks(page, [{ title: 'Gia hạn hộ chiếu' }]);
     await expect(page.getByText('Gia hạn hộ chiếu')).toBeVisible();
-    await page.request.post('/api/account/signout');
+    await page.request.post('/api/account/signout', { data: {} });
     await page.evaluate(async () => {
       const url = '/web/tasks.ts';
       const tasks = await import(/* @vite-ignore */ url);
