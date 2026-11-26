@@ -1,0 +1,30 @@
+.date {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heading {
+  font: 600 44px/1.05 var(--font-serif);
+  letter-spacing: -0.02em;
+  margin: 10px 0 24px;
+  text-wrap: balance;
+}
+
+.day {
+  display: block;
+  font-size: 12px;
+}
+
+.over {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .heading {
+    font-size: 26px;
+    margin-bottom: 16px;
+  }
+}
