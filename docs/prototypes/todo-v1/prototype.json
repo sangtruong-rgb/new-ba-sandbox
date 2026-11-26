@@ -1,0 +1,214 @@
+{
+  "title": "Việc: todo list có tài khoản, v1",
+  "binding": "look",
+  "screens": [
+    {
+      "id": "sign-in",
+      "title": "Đăng nhập",
+      "criteria": [
+        "C11",
+        "C19"
+      ],
+      "shows": "Màn đăng nhập: câu giới thiệu bên trái, form Email, Mật khẩu, nút Đăng nhập, liên kết Tạo tài khoản"
+    },
+    {
+      "id": "session-ended",
+      "title": "Phiên hết hạn",
+      "criteria": [
+        "C18",
+        "C19"
+      ],
+      "shows": "Màn đăng nhập, dưới tiêu đề là dòng 'Phiên đăng nhập đã hết, hãy đăng nhập lại.'"
+    },
+    {
+      "id": "sign-in-error",
+      "title": "Đăng nhập sai",
+      "criteria": [
+        "C14",
+        "C19"
+      ],
+      "shows": "Form đăng nhập với email đã gõ và lỗi 'Email hoặc mật khẩu không đúng'"
+    },
+    {
+      "id": "sign-up",
+      "title": "Tạo tài khoản",
+      "criteria": [
+        "C12",
+        "C19"
+      ],
+      "shows": "Form tạo tài khoản: Email, Mật khẩu (gợi ý 'Ít nhất 8 ký tự'), nút Tạo tài khoản, liên kết Đăng nhập"
+    },
+    {
+      "id": "sign-up-error",
+      "title": "Email đã có tài khoản",
+      "criteria": [
+        "C13",
+        "C19"
+      ],
+      "shows": "Form tạo tài khoản: ngay dưới ô Email viền đậm là lỗi 'Email này đã có tài khoản · Đăng nhập'"
+    },
+    {
+      "id": "list",
+      "title": "Danh sách, chưa chọn việc",
+      "criteria": [
+        "C6",
+        "C10",
+        "C15",
+        "C19",
+        "C20",
+        "C26",
+        "C27",
+        "C32",
+        "C33",
+        "C34",
+        "C35",
+        "C36",
+        "C38",
+        "C39",
+        "C40",
+        "C41",
+        "C42",
+        "C45",
+        "C46",
+        "C53"
+      ],
+      "shows": "Thanh trái với bộ lọc có số đếm và email + Đăng xuất; đầu cột ngày và 'Còn 8 việc, 2 việc đã quá hạn'; ô thêm việc; danh sách nhóm theo hạn (tiêu đề nhóm và số đếm do khung vẽ), giờ ở lề trái, quá hạn màu nhấn; khung chi tiết trống"
+    },
+    {
+      "id": "add-due",
+      "title": "Thêm việc kèm hạn chót",
+      "criteria": [
+        "C22",
+        "C26"
+      ],
+      "shows": "Ô thêm việc đã gõ tên; ô Ngày (28/11/2026) và ô Giờ (23:59) đứng thay nút Hạn trong cùng hàng"
+    },
+    {
+      "id": "add-invalid",
+      "title": "Thêm khi tên trống",
+      "criteria": [
+        "C21",
+        "C26"
+      ],
+      "shows": "Ô thêm việc viền đậm màu chữ, ngay dưới là lỗi 'Nhập tên việc'"
+    },
+    {
+      "id": "task",
+      "title": "Đang xem một việc",
+      "criteria": [
+        "C7",
+        "C10",
+        "C29",
+        "C30",
+        "C32",
+        "C39",
+        "C47",
+        "C48",
+        "C50",
+        "C53"
+      ],
+      "shows": "Việc 'Họp review thiết kế màn đặt lịch' được chọn: ô Tên việc làm tiêu đề, Hạn chót (ngày, giờ), Bỏ hạn; hàng hành động Đánh dấu xong, Xóa việc; dưới 1100px khung chi tiết thay chỗ danh sách, trên cùng là '‹ Danh sách'"
+    },
+    {
+      "id": "task-invalid",
+      "title": "Sửa tên để trống",
+      "criteria": [
+        "C49",
+        "C53"
+      ],
+      "shows": "Ô Tên việc trống với placeholder 'Tên việc', gạch dưới đậm và lỗi 'Nhập tên việc' bên dưới"
+    },
+    {
+      "id": "list-empty",
+      "title": "Tài khoản mới, chưa có việc",
+      "criteria": [
+        "C44",
+        "C45"
+      ],
+      "shows": "'Không còn việc nào', bộ lọc toàn số 0, thông báo 'Chưa có việc nào. Thêm việc đầu tiên ở ô phía trên.'"
+    },
+    {
+      "id": "filter-done-empty",
+      "title": "Lọc Đã xong khi chưa có việc xong",
+      "criteria": [
+        "C44",
+        "C45"
+      ],
+      "shows": "Bộ lọc 'Đã xong 0' đang chọn và thông báo 'Chưa có việc nào xong.'"
+    }
+  ],
+  "notShown": [
+    {
+      "criterion": "C1",
+      "why": "chạy server; không có gì để vẽ"
+    },
+    {
+      "criterion": "C2",
+      "why": "bảng và hợp đồng TaskStore phía server"
+    },
+    {
+      "criterion": "C3",
+      "why": "bảng và hợp đồng phiên đăng nhập phía server"
+    },
+    {
+      "criterion": "C4",
+      "why": "registry nạp feature; các slot thấy ở #list và #task"
+    },
+    {
+      "criterion": "C5",
+      "why": "store dùng chung và xử lý lỗi API"
+    },
+    {
+      "criterion": "C8",
+      "why": "hạ tầng test"
+    },
+    {
+      "criterion": "C9",
+      "why": "cách tổ chức CSS; màu và font thấy ở mọi màn"
+    },
+    {
+      "criterion": "C16",
+      "why": "API và cách lưu mật khẩu"
+    },
+    {
+      "criterion": "C17",
+      "why": "cần hai trình duyệt"
+    },
+    {
+      "criterion": "C23",
+      "why": "quy tắc của parseDue; lỗi 'Chọn ngày cho hạn chót' thử được ở #add-due bằng cách xóa ngày"
+    },
+    {
+      "criterion": "C24",
+      "why": "API"
+    },
+    {
+      "criterion": "C25",
+      "why": "hợp đồng mã nguồn"
+    },
+    {
+      "criterion": "C28",
+      "why": "tải lại trang"
+    },
+    {
+      "criterion": "C31",
+      "why": "API"
+    },
+    {
+      "criterion": "C37",
+      "why": "thời gian trôi; prototype dùng giờ mẫu cố định 14:20"
+    },
+    {
+      "criterion": "C43",
+      "why": "tải lại trang"
+    },
+    {
+      "criterion": "C51",
+      "why": "thứ tự lưu khi đổi việc đang chọn"
+    },
+    {
+      "criterion": "C52",
+      "why": "API"
+    }
+  ]
+}
