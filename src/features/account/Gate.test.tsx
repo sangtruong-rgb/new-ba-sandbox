@@ -47,7 +47,7 @@ afterEach(() => {
 
 describe('sign in screen', () => {
   test('C11 signed out, / shows only "Đăng nhập": Email, Mật khẩu, the button and "Tạo tài khoản"', async () => {
-    const fetch = serve(signedOut);
+    serve(signedOut);
     await show();
     expect(screen.getByRole('heading', { level: 1, name: 'Đăng nhập' })).toBeTruthy();
     expect(field('Email').type).toBe('email');
@@ -56,7 +56,7 @@ describe('sign in screen', () => {
     expect(screen.getByRole('link', { name: 'Tạo tài khoản' })).toBeTruthy();
     expect(screen.queryByRole('main')).toBeNull();
     expect(screen.queryByRole('navigation')).toBeNull();
-    expect(fetch.mock.calls.map((c) => c[0])).not.toContain('/api/tasks');
+    expect(document.querySelector('[data-slot="gate-loading"]')).toBeNull();
     expect(screen.queryByText('Phiên đăng nhập đã hết, hãy đăng nhập lại.')).toBeNull();
   });
 
@@ -150,7 +150,7 @@ describe('sign up screen', () => {
     expect(field('Mật khẩu').getAttribute('aria-invalid')).toBe('true');
     expect(field('Email').getAttribute('aria-invalid')).toBeNull();
     expect(field('Mật khẩu').nextElementSibling?.textContent).toBe('Mật khẩu cần ít nhất 8 ký tự');
-    expect(fetch.mock.calls.map((c) => c[0])).toEqual(['/api/me']);
+    expect(fetch.mock.calls.map((c) => c[0])).not.toContain('/api/account/signup');
   });
 
   test('C13 an email that has an account shows "Email này đã có tài khoản · Đăng nhập"', async () => {
@@ -224,5 +224,30 @@ describe('signed in', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Đăng nhập' })).toBeTruthy();
     expect(screen.getByRole('status').textContent).toBe('Phiên đăng nhập đã hết, hãy đăng nhập lại.');
     expect(screen.queryByText('Mua thuốc dị ứng cho mẹ')).toBeNull();
+  });
+
+  test('C11 C15 while GET /api/me answers, the page is set up but covered; then it shows', async () => {
+    let answer: (r: Response) => void = () => {};
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((url: string) =>
+        url === '/api/me'
+          ? new Promise<Response>((r) => (answer = r))
+          : Promise.resolve(new Response(JSON.stringify([task({ title: 'Mua thuốc dị ứng cho mẹ' })]), { status: 200 })),
+      ),
+    );
+    await show();
+    const cover = document.querySelector('[data-slot="gate-loading"]');
+    expect(cover).not.toBeNull();
+    expect(cover!.className).toMatch(/blank/);
+    expect(screen.queryByRole('heading', { level: 1, name: 'Đăng nhập' })).toBeNull();
+    await act(async () => {
+      answer(new Response(JSON.stringify(ME), { status: 200 }));
+    });
+    await act(async () => {});
+    expect(document.querySelector('[data-slot="gate-loading"]')).toBeNull();
+    expect(screen.getByRole('main')).toBeTruthy();
+    expect(screen.getByText('Mua thuốc dị ứng cho mẹ')).toBeTruthy();
+    expect(screen.getAllByText('minhthu@example.com').length).toBeGreaterThan(0);
   });
 });
