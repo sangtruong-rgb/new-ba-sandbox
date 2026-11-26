@@ -1,0 +1,71 @@
+.add {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.title {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
+}
+
+.title[aria-invalid='true'],
+.invalid input {
+  border: 2px solid var(--ink);
+}
+
+.dueButton {
+  color: var(--muted);
+  font-size: 14px;
+  padding: 0 12px;
+  border: 1px dashed var(--line);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.set {
+  color: var(--ink);
+  border-style: solid;
+}
+
+.submit {
+  font-weight: 600;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 0;
+  border-radius: 4px;
+  padding: 0 18px;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.error {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  margin: 4px 0 0;
+}
+
+.titleError {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+@media (max-width: 600px) {
+  .add {
+    grid-template-columns: 1fr auto;
+  }
+  .add .due {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-self: start;
+    min-height: 40px;
+  }
+}
