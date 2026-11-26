@@ -1,7 +1,9 @@
 /* Sign-in and sign-up screens and the account slot; docs/prototypes/todo-v1 #sign-in, #sign-up, #list. */
 
 .blank {
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
   background: var(--bg);
 }
 

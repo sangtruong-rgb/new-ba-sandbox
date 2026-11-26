@@ -161,9 +161,15 @@ export function Gate({ children }: { children: ReactNode }) {
     return () => window.removeEventListener(UNAUTHENTICATED_EVENT, ended);
   }, []);
 
-  if (auth.status === 'loading') return <div className={s.blank} data-slot="gate" />;
   if (auth.status === 'out') {
     return <SignForm key={auth.ended ? 'ended' : 'fresh'} ended={auth.ended} />;
   }
-  return <>{children}</>;
+  // While GET /api/me answers, the page is already mounted (its features set up as on any load)
+  // but covered, so nothing of it shows before the user is known.
+  return (
+    <>
+      {children}
+      {auth.status === 'loading' && <div className={s.blank} data-slot="gate-loading" aria-busy="true" />}
+    </>
+  );
 }
